@@ -1,6 +1,9 @@
 import DiaryCard from '../components/DiaryCard';
 
 import React from 'react';
+import happy from '../../assets/moods/happy.png';
+import mad from '../../assets/moods/mad.png';
+import smile from '../../assets/moods/smile.png';
 
 import {
   View,
@@ -16,7 +19,7 @@ const diaryEntries = [
     date: '2025-10-06',
     preview:
       'Hari ini aku bangun lebih pagi dan berjalan kaki 20 menit. Udara terasa sejuk...',
-    moodUri: 'https://picsum.photos/seed/happy/80',
+    moodUri: happy,
   },
 
   {
@@ -25,16 +28,15 @@ const diaryEntries = [
     date: '2025-10-05',
     preview:
       'Menyelesaikan modul praktikum dan berdiskusi dengan tim. Banyak insight baru...',
-    moodUri: 'https://picsum.photos/seed/focus/80',
+    moodUri: mad,
   },
-
   {
     id: 3,
     title: 'Senja di Taman',
     date: '2025-10-04',
     preview:
       'Menikmati senja sambil membaca buku favorit. Warna langit sangat indah...',
-    moodUri: 'https://picsum.photos/seed/calm/80',
+    moodUri: smile,
   },
 ];
 

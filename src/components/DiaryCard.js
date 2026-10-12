@@ -15,7 +15,7 @@ export default function DiaryCard({
   return (
     <View style={styles.card}>
       <Image
-        source={{ uri: moodUri }}
+        source={moodUri}
         style={styles.mood}
       />
 
