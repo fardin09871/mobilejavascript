@@ -11,9 +11,26 @@ export default function DiaryCard({
   date,
   preview,
   moodUri,
+  mood = 'neutral',
 }) {
+  const moodColors = {
+    happy: '#22c55e',
+    sedih: '#60a5fa',
+    angry: '#ef4444',
+    calm: '#a78bfa',
+    neutral: '#e5e7eb',
+  };
+
   return (
-    <View style={styles.card}>
+    <View
+      style={[
+        styles.card,
+        {
+          borderColor:
+            moodColors[mood] || moodColors.neutral,
+        },
+      ]}
+    >
       <Image
         source={moodUri}
         style={styles.mood}
@@ -31,6 +48,10 @@ export default function DiaryCard({
         <Text style={styles.preview}>
           {preview}
         </Text>
+
+        <Text style={styles.moodLabel}>
+          Mood: {mood}
+        </Text>
       </View>
     </View>
   );
@@ -41,10 +62,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
     padding: 12,
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderWidth: 2,
     borderRadius: 12,
     marginBottom: 12,
+    backgroundColor: '#ffffff',
   },
 
   mood: {
@@ -60,6 +81,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '700',
+    color: '#111827',
   },
 
   date: {
@@ -70,5 +92,14 @@ const styles = StyleSheet.create({
 
   preview: {
     fontSize: 14,
+    color: '#374151',
+  },
+
+  moodLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: 6,
+    color: '#6b7280',
+    textTransform: 'capitalize',
   },
 });
