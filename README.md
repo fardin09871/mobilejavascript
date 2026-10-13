@@ -1,9 +1,9 @@
 # Diary App — Mobile Programming
 
 ## Identitas Mahasiswa
-- **Nama:** [Nama Lengkap]
-- **NIM:** [NIM]
-- **Mata Kuliah:** Mobile Programming
+- **Nama:** Fardin Muhammad Azis
+- **NIM:** 2430511070
+- **Mata Kuliah:** Mobile multiplatform
 - **Praktikum:** Pengembangan Diary App
 
 ## Deskripsi
