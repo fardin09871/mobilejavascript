@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { StatusBar } from 'expo-status-bar';
 import {
   SafeAreaProvider,
   SafeAreaView,
@@ -15,6 +15,7 @@ export default function App() {
         edges={['top', 'left', 'right']}
       >
         <DiaryListScreen />
+        <StatusBar style="dark" />
       </SafeAreaView>
     </SafeAreaProvider>
   );

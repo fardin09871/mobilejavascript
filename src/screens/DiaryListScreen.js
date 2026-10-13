@@ -1,161 +1,245 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import {
   View,
   Text,
   Image,
+  FlatList,
   StyleSheet,
-  ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 
 import DiaryCard from '../components/DiaryCard';
+import DiaryDetailModal from '../components/DiaryDetailModal';
+
+import {
+  COLORS,
+  SPACE,
+  TYPO,
+  BREAKPOINTS,
+} from '../styles/tokens';
 
 import happy from '../../assets/moods/happy.png';
 import mad from '../../assets/moods/mad.png';
 import smile from '../../assets/moods/smile.png';
 import sedih from '../../assets/moods/sedih.png';
-const avatar = require('../../assets/moods/smile.png');
+
+const avatar = smile;
 
 const diaryEntries = [
   {
-    id: 1,
-    title: 'Pagi yang Tenang',
-    date: '2026-10-12',
-    preview:
-      'Hari ini aku bangun lebih pagi dan berjalan kaki 20 menit. Udara terasa sejuk...',
+    id: '1',
+    title: 'Hari yang Menyenangkan',
+    date: '12 Oktober 2026',
+    preview: 'Hari ini banyak hal menyenangkan terjadi.',
+    body: 'Hari ini aku menjalani aktivitas dengan perasaan senang. Aku belajar hal baru dan menghabiskan waktu bersama teman-teman.',
+    mood: 'Senang',
     moodUri: happy,
-    mood: 'calm',
   },
   {
-    id: 2,
-    title: 'Produktif di Kampus',
-    date: '2026-10-11',
-    preview:
-      'Menyelesaikan modul praktikum dan berdiskusi dengan tim. Banyak insight baru...',
+    id: '2',
+    title: 'Tugas yang Menumpuk',
+    date: '11 Oktober 2026',
+    preview: 'Banyak tugas yang harus diselesaikan.',
+    body: 'Tugas kuliah cukup banyak hari ini. Aku harus belajar mengatur waktu dan menyelesaikan pekerjaan satu per satu.',
+    mood: 'Kesal',
     moodUri: mad,
-    mood: 'angry',
   },
   {
-    id: 3,
-    title: 'Senja di Taman',
-    date: '2026-10-10',
-    preview:
-      'Menikmati senja sambil membaca buku favorit. Warna langit sangat indah...',
-    moodUri: smile,
-    mood: 'happy',
-  },
-  {
-    id: 4,
+    id: '3',
     title: 'Belajar Hal Baru',
-    date: '2026-10-09',
-    preview:
-      'Hari ini aku belajar hal baru dalam pemrograman. Walaupun sulit, aku tetap mencoba.',
+    date: '10 Oktober 2026',
+    preview: 'Mencoba memahami materi pemrograman.',
+    body: 'Aku mencoba memahami materi pemrograman yang sebelumnya terasa sulit. Setelah berlatih, aku mulai menemukan polanya.',
+    mood: 'Semangat',
     moodUri: smile,
-    mood: 'happy',
   },
   {
-    id: 5,
+    id: '4',
     title: 'Hari yang Melelahkan',
-    date: '2026-10-08',
-    preview:
-      'Banyak kegiatan hari ini. Saatnya beristirahat dan menyiapkan diri untuk esok.',
+    date: '9 Oktober 2026',
+    preview: 'Perlu istirahat setelah aktivitas seharian.',
+    body: 'Aktivitas hari ini cukup melelahkan. Aku akan beristirahat dan menyiapkan rencana untuk hari berikutnya.',
+    mood: 'Sedih',
     moodUri: sedih,
-    mood: 'sad',
+  },
+  {
+    id: '5',
+    title: 'Ngobrol dengan Teman',
+    date: '8 Oktober 2026',
+    preview: 'Senang bisa berbagi cerita dengan teman.',
+    body: 'Aku menghabiskan waktu untuk berbagi cerita dengan teman. Obrolan sederhana membuat suasana hati menjadi lebih baik.',
+    mood: 'Senang',
+    moodUri: happy,
+  },
+  {
+    id: '6',
+    title: 'Target Minggu Ini',
+    date: '7 Oktober 2026',
+    preview: 'Menyusun target belajar dan proyek.',
+    body: 'Aku menulis target belajar untuk minggu ini, termasuk latihan coding dan melanjutkan proyek aplikasi. Target yang jelas membuatku lebih terarah.',
+    mood: 'Semangat',
+    moodUri: smile,
+  },
+  {
+    id: '7',
+    title: 'Waktu untuk Diri Sendiri',
+    date: '6 Oktober 2026',
+    preview: 'Mengambil jeda untuk memulihkan energi.',
+    body: 'Hari ini aku memberi waktu untuk diri sendiri. Aku ingin menjaga keseimbangan antara kuliah, proyek, dan istirahat.',
+    mood: 'Tenang',
+    moodUri: sedih,
   },
 ];
 
 export default function DiaryListScreen() {
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.headerContainer}>
-          <View>
-            <Text style={styles.greeting}>
-              PERSONAL DIARY
-            </Text>
-            <Text style={styles.header}>
-              Buku Harian
-            </Text>
-            <Text style={styles.subtitle}>
-              Ceritakan harimu di sini.
-            </Text>
-          </View>
+  const { width } = useWindowDimensions();
+  const [selected, setSelected] = useState(null);
 
-          <Image
-            source={avatar}
-            style={styles.avatar}
-          />
+  const twoCols = width >= BREAKPOINTS.tablet;
+
+  const renderItem = ({ item }) => (
+    <View style={[
+      styles.cardWrapper,
+      twoCols && styles.gridItem,
+    ]}>
+      <DiaryCard
+        title={item.title}
+        date={item.date}
+        preview={item.preview}
+        moodUri={item.moodUri}
+        onPress={() => setSelected(item)}
+        variant={twoCols ? 'grid' : 'list'}
+      />
+    </View>
+  );
+
+  return (
+    <View style={styles.screen}>
+      <View style={styles.header}>
+        <View style={styles.headerText}>
+          <Text style={styles.eyebrow}>
+            PERSONAL DIARY
+          </Text>
+
+          <Text style={styles.heading}>
+            Buku Harian
+          </Text>
+
+          <Text style={styles.subtitle}>
+            Ceritakan harimu di sini.
+          </Text>
         </View>
 
+        <Image
+          source={avatar}
+          style={styles.avatar}
+          accessibilityLabel="Avatar diary"
+        />
+      </View>
+
+      <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>
           Catatan Harian ({diaryEntries.length})
         </Text>
+      </View>
 
-        {diaryEntries.map((entry) => (
-          <DiaryCard
-            key={entry.id}
-            title={entry.title}
-            date={entry.date}
-            preview={entry.preview}
-            moodUri={entry.moodUri}
-            mood={entry.mood}
-          />
-        ))}
-      </ScrollView>
+      <FlatList
+        key={twoCols ? 'grid' : 'list'}
+        data={diaryEntries}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        numColumns={twoCols ? 2 : 1}
+        contentContainerStyle={styles.listContent}
+        columnWrapperStyle={
+          twoCols ? styles.columnWrapper : undefined
+        }
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={7}
+      />
+
+      <DiaryDetailModal
+        visible={selected !== null}
+        entry={selected}
+        onClose={() => setSelected(null)}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#f8fafc',
-  },
-
-  content: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-
-  headerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 24,
-    paddingVertical: 8,
-  },
-
-  greeting: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#64748b',
-    letterSpacing: 2,
-    marginBottom: 4,
+    backgroundColor: COLORS.background,
+    paddingHorizontal: SPACE.l,
   },
 
   header: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#0f172a',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: SPACE.xl,
+    paddingBottom: SPACE.l,
+    gap: SPACE.m,
+  },
+
+  headerText: {
+    flex: 1,
+  },
+
+  eyebrow: {
+    fontSize: TYPO.caption,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    color: COLORS.accent,
+    marginBottom: SPACE.xs,
+  },
+
+  heading: {
+    fontSize: TYPO.h1,
+    fontWeight: '700',
+    color: COLORS.text,
   },
 
   subtitle: {
-    fontSize: 13,
-    color: '#64748b',
-    marginTop: 4,
+    marginTop: SPACE.xs,
+    fontSize: TYPO.body,
+    color: COLORS.muted,
   },
 
   avatar: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    borderWidth: 2,
-    borderColor: '#cbd5e1',
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: COLORS.accentLight,
+  },
+
+  sectionHeader: {
+    paddingTop: SPACE.s,
+    paddingBottom: SPACE.m,
   },
 
   sectionTitle: {
-    fontSize: 16,
+    fontSize: TYPO.title,
     fontWeight: '700',
-    color: '#334155',
-    marginBottom: 12,
+    color: COLORS.text,
+  },
+
+  listContent: {
+    paddingBottom: SPACE.xxl,
+  },
+
+  cardWrapper: {
+    width: '100%',
+    marginBottom: SPACE.m,
+  },
+
+  columnWrapper: {
+    gap: SPACE.m,
+    alignItems: 'stretch',
+  },
+
+  gridItem: {
+    width: '48%',
   },
 });

@@ -1,43 +1,61 @@
+
 import React from 'react';
 import {
   View,
   Text,
   Image,
   StyleSheet,
+  Pressable,
 } from 'react-native';
+
+import {
+  COLORS,
+  SPACE,
+  RADIUS,
+  TYPO,
+} from '../styles/tokens';
 
 export default function DiaryCard({
   title,
   date,
   preview,
   moodUri,
-  mood = 'neutral',
+  onPress,
+  variant = 'list',
 }) {
-  const moodColors = {
-    happy: '#22c55e',
-    sedih: '#60a5fa',
-    angry: '#ef4444',
-    calm: '#a78bfa',
-    neutral: '#e5e7eb',
-  };
+  const imageSource =
+    typeof moodUri === 'string'
+      ? { uri: moodUri }
+      : moodUri;
 
   return (
-    <View
-      style={[
+    <Pressable
+      style={({ pressed }) => [
         styles.card,
-        {
-          borderColor:
-            moodColors[mood] || moodColors.neutral,
-        },
+        variant === 'grid' && styles.cardGrid,
+        pressed && styles.pressed,
       ]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Buka diary ${title}, tanggal ${date}`}
+      accessibilityHint="Ketuk untuk membaca catatan lengkap"
     >
-      <Image
-        source={moodUri}
-        style={styles.mood}
-      />
+      {moodUri ? (
+        <Image
+          source={imageSource}
+          style={styles.mood}
+          resizeMode="cover"
+          accessibilityLabel={`Mood untuk ${title}`}
+        />
+      ) : (
+        <View
+          style={styles.mood}
+          accessible={false}
+        />
+      )}
 
       <View style={styles.content}>
-        <Text style={styles.title}>
+        <Text style={styles.title} numberOfLines={2}>
           {title}
         </Text>
 
@@ -45,61 +63,63 @@ export default function DiaryCard({
           {date}
         </Text>
 
-        <Text style={styles.preview}>
+        <Text style={styles.preview} numberOfLines={3}>
           {preview}
         </Text>
-
-        <Text style={styles.moodLabel}>
-          Mood: {mood}
-        </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
+    flex: 1,
     flexDirection: 'row',
-    gap: 12,
-    padding: 12,
-    borderWidth: 2,
-    borderRadius: 12,
-    marginBottom: 12,
-    backgroundColor: '#ffffff',
+    alignItems: 'flex-start',
+    gap: SPACE.m,
+    padding: SPACE.m,
+    minHeight: 100,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: RADIUS.card,
+    backgroundColor: COLORS.surface,
+  },
+
+  cardGrid: {
+    flexDirection: 'column',
+    height: '100%',
+  },
+
+  pressed: {
+    opacity: 0.75,
   },
 
   mood: {
     width: 64,
     height: 64,
-    borderRadius: 32,
+    borderRadius: RADIUS.avatar,
+    backgroundColor: COLORS.accentLight,
   },
 
   content: {
     flex: 1,
+    gap: SPACE.xs,
   },
 
   title: {
-    fontSize: 16,
+    fontSize: TYPO.title,
     fontWeight: '700',
-    color: '#111827',
+    color: COLORS.text,
   },
 
   date: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginBottom: 6,
+    fontSize: TYPO.caption,
+    color: COLORS.muted,
   },
 
   preview: {
-    fontSize: 14,
-    color: '#374151',
-  },
-
-  moodLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 6,
-    color: '#6b7280',
-    textTransform: 'capitalize',
+    fontSize: TYPO.body,
+    lineHeight: 20,
+    color: COLORS.text,
   },
 });
